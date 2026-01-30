@@ -1,0 +1,20 @@
+{
+  "record_id": "6",
+  "evaluation_time": "2025-11-25T12:20:00Z",
+  "scores": {
+    "accuracy": 3,
+    "relevance": 3,
+    "timeliness": 3,
+    "completeness": 3,
+    "rationality": 3,
+    "memory": 3,
+    "understandability": 3,
+    "conciseness": 3,
+    "personification": 3
+  },
+  "details": {
+    "accuracy_analysis": "解读中的诊断结论（胃角低分化腺癌、淋巴结转移数据）与病理报告图片完全一致，无遗漏或错误。",
+    "rationality_analysis": "建议内容（化疗评估、营养支持、随访计划）经RAG验证符合《胃癌诊疗指南》及加速康复外科共识，针对性强。",
+    "improvement_suggestions": "当前解读质量极高，建议继续保持这种结构化、全方位的解读风格。"
+  }
+}

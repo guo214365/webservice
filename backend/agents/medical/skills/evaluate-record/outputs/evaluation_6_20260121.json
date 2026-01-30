@@ -1,0 +1,30 @@
+{
+  "case_id": "6",
+  "query": "三期胃癌手术后化疗存活率有多少",
+  "scores": {
+    "accuracy": 0,
+    "relevance": 1,
+    "timeliness": 2,
+    "comprehensiveness": 2,
+    "recommendation_rationality": 1,
+    "multi_turn_memory": 0,
+    "understandability": 2,
+    "conciseness": 1,
+    "humanization": 2
+  },
+  "weighted_overall": 1.07,
+  "rag": {
+    "query": "III期 胃癌 术后 辅助化疗 随访 复查 影像 CT 肿瘤标志物",
+    "source": "guideline",
+    "results": 0,
+    "handling": "按SKILL：RAG调用失败/无结果→不强制扣分，但建议合理性评分上限为2分；并标注为缺乏依据项。"
+  },
+  "image_extracted": {
+    "report_type": "普通病理报告单（胃）",
+    "diagnosis_text": [
+      "（大部胃）胃角浸润性溃疡型低分化腺癌",
+      "（小弯）淋巴结转移性腺癌（2/7枚）",
+      "（大弯）淋巴结转移性腺癌（1/2枚）"
+    ]
+  }
+}

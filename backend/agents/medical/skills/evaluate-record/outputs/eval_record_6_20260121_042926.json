@@ -1,0 +1,27 @@
+{
+  "id": "6",
+  "timestamp": "2026-01-21T04:29:26Z",
+  "query": "三期胃癌手术后化疗存活率有多少",
+  "scores": {
+    "accuracy": 0,
+    "relevance": 1,
+    "timeliness": 2,
+    "comprehensiveness": 2,
+    "advice_reasonableness": 1,
+    "multiturn_memory": 0,
+    "understandability": 2,
+    "conciseness": 1,
+    "humanization": 2
+  },
+  "overall": {
+    "weighted_score": 0.98,
+    "scale_max": 3.0
+  },
+  "notes": {
+    "rag": {
+      "coverage": "2 queries executed",
+      "results": "0 hits",
+      "handling": "No evidence found; per SKILL, mark as \"缺乏依据\" and do not force deduction; however some suggestions appear over-specific without citing sources."
+    }
+  }
+}

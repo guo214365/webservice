@@ -1,0 +1,43 @@
+{
+  "case_id": "1",
+  "report_type": "血常规（红细胞参数/血小板参数节选）",
+  "extracted_from_image": {
+    "MCH_pg": {"value": 23.6, "ref": "27-34", "flag": "low"},
+    "MCHC_g_L": {"value": 305, "ref": "316-354", "flag": "low"},
+    "RDW_CV_percent": {"value": 18.2, "ref": "10-15", "flag": "high"},
+    "RDW_SD_fL": {"value": 50.8, "ref": "39-46", "flag": "high"},
+    "PDW_fL": {"value": 15.8, "ref": "9-17", "flag": "normal"},
+    "MPV_fL": {"value": 11.1, "ref": "9.1-12.1", "flag": "normal"},
+    "P_LCR_percent": {"value": 36.1, "ref": "13-43", "flag": "normal"},
+    "PCT_percent": {"value": 0.260, "ref": "0.17-0.39", "flag": "normal"},
+    "IG_abs_10e9_L": {"value": 0.010, "ref": "0-0.06", "flag": "normal"},
+    "IG_percent": {"value": 0.10, "ref": "0-0.5", "flag": "normal"}
+  },
+  "scores": {
+    "accuracy": 2,
+    "relevance": 2,
+    "timeliness": 2,
+    "completeness": 2,
+    "recommendation_reasonableness": 2,
+    "multi_turn_memory": 1,
+    "understandability": 2,
+    "conciseness": 2,
+    "human_likeness": 2
+  },
+  "weighted_overall_score_out_of_3": 1.94,
+  "key_issues": [
+    "存在与报告图像不一致/未证据支持的表述：提到血小板指标‘轻度升高’，但图像显示PDW/MPV/P-LCR/PCT均在参考范围内。",
+    "未明确说明仍需结合Hb、RBC、MCV等完整血常规数据判断贫血程度与分型。",
+    "多轮对话中曾出现把 5.11×10^12/L 误作HGB 的历史错误（该数值更像RBC），本次解读虽未重复该错误，但历史一致性一般。"
+  ],
+  "rag_check": {
+    "queries": [
+      "缺铁性贫血 RDW MCH MCHC",
+      "缺铁性贫血 铁蛋白 总铁结合力 血清铁"
+    ],
+    "findings": [
+      "权威来源指出：缺铁性贫血可见RDW升高，结合MCV<80 fL可支持初步判断（内科住院医师手册）。",
+      "确诊/进一步评估常需铁代谢：血清铁、总铁结合力、转铁蛋白饱和度、血清铁蛋白等（内科学/血液内科）。"
+    ]
+  }
+}

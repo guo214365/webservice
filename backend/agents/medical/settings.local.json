@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(basic-persona)",
+      "Skill(evaluate-record)",
+      "Bash(tree:*)",
+      "Bash(cat:*)",
+      "Bash(python3:*)",
+      "Bash(pip3 install:*)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/followup_router_inject.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "outputStyle": "default"
+}

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI家庭医生(报告单)</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css">
+    <style>
+        .external-badge {
+            display: inline-block;
+            background: #2196F3;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        
+        /* 消息操作按钮样式 */
+        .message-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+        
+        .action-btn {
+            background: none;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .action-btn:hover {
+            background: #F5F5F5;
+        }
+
+        /* 侧边栏标签页 */
+        .sidebar-tabs {
+            display: flex;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .sidebar-tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 13px;
+            color: #666;
+            transition: all 0.2s;
+        }
+
+        .sidebar-tab:hover {
+            background: #f5f5f5;
+        }
+
+        .sidebar-tab.active {
+            color: #0084ff;
+            border-bottom: 2px solid #0084ff;
+            margin-bottom: -1px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-panel {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-panel.active {
+            display: block;
+        }
+
+        /* Skills列表 */
+        .skills-list {
+            padding: 10px;
+        }
+
+        .skills-empty {
+            padding: 12px;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .skill-item {
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            border: 1px solid #e0e0e0;
+            background: white;
+        }
+
+        .skill-item:hover {
+            background: #e3f2fd;
+            border-color: #0084ff;
+        }
+
+        .skill-item .skill-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .skill-item .skill-desc {
+            font-size: 12px;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Skill编辑器模态框 */
+        .skill-editor-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .skill-editor-overlay.active {
+            display: flex;
+        }
+
+        .skill-editor-modal {
+            background: white;
+            border-radius: 0;
+            width: 100vw;
+            max-width: none;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .skill-editor-header {
+            padding: 6px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .skill-editor-header h3 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .skill-editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .skill-editor-actions button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-save {
+            background: #0084ff;
+            color: white;
+            border: none;
+        }
+
+        .btn-save:hover {
+            background: #0073e6;
+        }
+
+        .btn-save:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-close {
+            background: #f1f1f1;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .btn-close:hover {
+            background: #e0e0e0;
+        }
+
+        .skill-editor-body {
+            flex: 1;
+            padding: 4px 6px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .skill-editor-textarea {
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            resize: none;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .skill-editor-textarea:focus {
+            border-color: #0084ff;
+            box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.1);
+        }
+
+        .skill-editor-status {
+            font-size: 12px;
+            color: #666;
+            margin-right: 12px;
+        }
+
+        .skill-editor-status.saved {
+            color: #4CAF50;
+        }
+
+        .skill-editor-status.modified {
+            color: #FF9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 左侧历史记录面板 -->
+        <aside class="history-sidebar">
+            <div class="sidebar-header">
+                <h2>历史记录</h2>
+                <button id="clearHistoryBtn" class="clear-history-btn" title="清空历史">🗑️</button>
+            </div>
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" data-panel="history" id="historyTab">历史对话</button>
+                <button class="sidebar-tab" data-panel="skills" id="skillsTab">技能配置</button>
+            </div>
+            <div class="sidebar-content">
+                <div id="historyPanel" class="sidebar-panel active">
+                    <div class="history-list" id="historyList"></div>
+                </div>
+                <div id="skillsPanel" class="sidebar-panel">
+                    <div class="skills-list" id="skillsList"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <header class="header">
+                <div class="status-indicator" id="statusIndicator">
+                     🔴
+                </div>
+                <h1>AI家庭医生（报告单）</h1>
+                <button id="newChatBtn" class="new-chat-btn" title="添加新对话">
+                    <span class="new-chat-icon">＋</span>
+                </button>
+            </header>
+
+            <div class="chat-container">
+                <div id="messages" class="messages"></div>
+            </div>
+
+            <div class="input-container">
+                <textarea 
+                    id="userInput" 
+                    placeholder="有什么健康问题尽管问我"
+                    rows="1"
+                ></textarea>
+                <div class="input-buttons">
+                    <button type="button" id="imageUploadBtn" class="upload-btn" title="上传图片">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M4 5h16v10.172l-3.586-3.586a1 1 0 0 0-1.414 0L8 16l-3-3-3 3V5zm16-2H4c-1.103 0-2 .897-2 2v14c0 1.103.897 2 2 2h16c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2zm-1 15H5l3-3 2 2 3.586-3.586L19 13.172V18z"/>
+                        </svg>
+                    </button>
+                    <input type="file" id="imageUpload" accept="image/*" style="display:none">
+                    <button type="button" id="jsonUploadBtn" class="upload-btn" title="上传JSON文件">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                    </button>
+                    <input type="file" id="jsonUpload" accept=".json" style="display:none">
+                    <div class="export-dropdown">
+                        <button type="button" id="exportBtn" class="upload-btn" title="导出对话">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2z"/>
+                                <path d="M11 3L5.5 8.5l1.42 1.42L11 5.84V15h2V5.84l4.08 4.08L18.5 8.5z"/>
+                            </svg>
+                        </button>
+                        <div id="exportMenu" class="export-menu" style="display:none;">
+                            <button id="exportMarkdown" class="export-option">📝 导出为Markdown</button>
+                            <button id="exportWord" class="export-option">📄 导出为Word</button>
+                        </div>
+                    </div>
+                    <button id="sendBtn" class="send-btn">
+                        <span class="send-text">发送</span>
+                    </button>
+                </div>
+            </div>
+            <div id="imagePreview" class="image-preview"></div>
+            <div id="jsonPreview" class="json-preview"></div>
+        </main>
+    </div>
+
+    <!-- Skill编辑器模态框 (放在container外面) -->
+    <div class="skill-editor-overlay" id="skillEditorOverlay">
+        <div class="skill-editor-modal">
+            <div class="skill-editor-header">
+                <h3>编辑技能: <span id="skillEditorTitle"></span></h3>
+                <div class="skill-editor-actions">
+                    <span class="skill-editor-status" id="skillEditorStatus">就绪</span>
+                    <button class="btn-save" id="skillSaveBtn">保存</button>
+                    <button class="btn-close" id="skillCloseBtn">关闭</button>
+                </div>
+            </div>
+            <div class="skill-editor-body">
+                <textarea class="skill-editor-textarea" id="skillEditorContent" placeholder="加载中..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/highlight.min.js"></script>
+    <!-- 文件导出库 -->
+    <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+    <!-- Word文档生成库 -->
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.js"></script>
+    <script src="/static/js/app_ws.js"></script>
+    <script>
+        (function() {
+            const skillsTab = document.getElementById('skillsTab');
+            const historyTab = document.getElementById('historyTab');
+            const skillsPanel = document.getElementById('skillsPanel');
+            const historyPanel = document.getElementById('historyPanel');
+            const skillsList = document.getElementById('skillsList');
+            const overlay = document.getElementById('skillEditorOverlay');
+            const title = document.getElementById('skillEditorTitle');
+            const textarea = document.getElementById('skillEditorContent');
+            const status = document.getElementById('skillEditorStatus');
+            const saveBtn = document.getElementById('skillSaveBtn');
+            const closeBtn = document.getElementById('skillCloseBtn');
+
+            function setActive(panelName) {
+                document.querySelectorAll('.sidebar-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.sidebar-panel').forEach(p => p.classList.remove('active'));
+                const tab = document.querySelector(`.sidebar-tab[data-panel="${panelName}"]`);
+                const panel = document.getElementById(panelName + 'Panel');
+                if (tab) tab.classList.add('active');
+                if (panel) panel.classList.add('active');
+            }
+
+            function renderFallbackList(skills) {
+                if (!skillsList) return;
+                if (!skills.length) {
+                    skillsList.innerHTML = '<div class="skills-empty">暂无可编辑的技能</div>';
+                    return;
+                }
+                skillsList.innerHTML = skills.map(skill => `
+                    <div class="skill-item" data-skill-name="${skill.name}">
+                        <div class="skill-name">📋 ${skill.name}</div>
+                        <div class="skill-desc">${skill.description || '暂无描述'}</div>
+                    </div>
+                `).join('');
+                skillsList.querySelectorAll('.skill-item').forEach(item => {
+                    item.addEventListener('click', () => openSkillEditor(item.dataset.skillName));
+                });
+            }
+
+            async function loadSkillsList() {
+                if (!skillsList) return;
+                skillsList.innerHTML = '<div class="skills-empty">加载中...</div>';
+                try {
+                    const resp = await fetch('/api/skills');
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    renderFallbackList(data.skills || []);
+                } catch (e) {
+                    skillsList.innerHTML = '<div class="skills-empty">加载技能列表失败</div>';
+                    console.error(e);
+                }
+            }
+
+            async function openSkillEditor(skillName) {
+                if (!overlay || !textarea || !status || !title) return;
+                title.textContent = skillName;
+                textarea.value = '加载中...';
+                textarea.disabled = true;
+                status.textContent = '加载中...';
+                status.className = 'skill-editor-status';
+                overlay.classList.add('active');
+                try {
+                    const resp = await fetch(`/api/skills/${skillName}`);
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    textarea.value = data.content || '';
+                    textarea.disabled = false;
+                    status.textContent = '就绪';
+                } catch (e) {
+                    status.textContent = '加载失败';
+                    textarea.disabled = true;
+                    console.error(e);
+                }
+            }
+
+            async function saveSkill(skillName) {
+                if (!textarea || !status || !saveBtn) return;
+                saveBtn.disabled = true;
+                status.textContent = '保存中...';
+                try {
+                    const resp = await fetch(`/api/skills/${skillName}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ content: textarea.value })
+                    });
+                    const data = await resp.json();
+                    if (data && data.success) {
+                        status.textContent = '✓ 保存成功，已生效！';
+                        status.className = 'skill-editor-status saved';
+                    } else {
+                        status.textContent = '保存失败';
+                        status.className = 'skill-editor-status';
+                    }
+                } catch (e) {
+                    status.textContent = '保存失败';
+                    status.className = 'skill-editor-status';
+                    console.error(e);
+                } finally {
+                    saveBtn.disabled = false;
+                }
+            }
+
+            if (skillsTab) {
+                skillsTab.addEventListener('click', () => {
+                    setActive('skills');
+                    if (typeof window.__openSkillsTab === 'function') {
+                        window.__openSkillsTab();
+                    } else {
+                        loadSkillsList();
+                        openSkillEditor('evaluate-record');
+                    }
+                });
+            }
+
+            if (historyTab) {
+                historyTab.addEventListener('click', () => {
+                    setActive('history');
+                    if (typeof window.__openHistoryTab === 'function') {
+                        window.__openHistoryTab();
+                    }
+                });
+            }
+
+            if (saveBtn) {
+                saveBtn.addEventListener('click', () => {
+                    const name = title ? title.textContent.trim() : 'evaluate-record';
+                    if (name) saveSkill(name);
+                });
+            }
+
+            if (closeBtn && overlay) {
+                closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) overlay.classList.remove('active');
+                });
+            }
+
+            if (!window.__appWsLoaded) {
+                console.warn('app_ws.js 未加载，已启用技能配置兜底逻辑');
+            }
+        })();
+    </script>
+</body>
+</html>
