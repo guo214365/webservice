@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ai-chat-websocket
+    env: python
+    plan: free
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/app_websocket.py
+    healthCheckPath: /api/status
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.8
+      - key: CORS_ORIGINS
+        value: https://your-domain.onrender.com

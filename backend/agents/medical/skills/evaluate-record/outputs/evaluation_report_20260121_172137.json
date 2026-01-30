@@ -1,0 +1,65 @@
+{
+  "meta": {
+    "version": "1.0",
+    "generated_at": "2026-01-21 00:00:00",
+    "evaluator": "AI系统",
+    "reviewer": "无"
+  },
+  "report_info": {
+    "type": "核磁共振平扫",
+    "exam_part": "腰椎"
+  },
+  "overall": {
+    "total_score": 1.6,
+    "category_a_score": 2.0,
+    "category_b_score": 1.7,
+    "category_c_score": 1.2
+  },
+  "category_a": {
+    "accuracy": {
+      "score": 2,
+      "reason": "与报告图像文字一致：诊断提到L4/5、L5/S1椎间盘变性并膨出，L4椎体下终板I型终板炎；未见编造额外影像结论。"
+    },
+    "relevance": {
+      "score": 2,
+      "reason": "无明确用户提问（query为空），按规则默认2分；内容围绕腰椎MRI异常进行解释。"
+    }
+  },
+  "category_b": {
+    "timeliness": {
+      "score": 2,
+      "reason": "未引用过时疗法；建议以常见保守/分级就医为主。"
+    },
+    "comprehensiveness": {
+      "score": 2,
+      "reason": "包含结论解释、风险提示（神经受压/马尾症状）、用药与就医建议、生活方式与康复训练，模块较完整。"
+    },
+    "suggestion_quality": {
+      "score": 1,
+      "reason": "RAG提示：增强MRI主要在术后鉴别等场景价值更明确；对本例未术后、且仅报告文字提示终板炎/膨出，‘1个月内复查MRI（平扫+增强）’略偏激进且缺乏分层依据。另‘避免按摩/推拿’与部分文献中推拿/理疗可用于缓解痉挛的描述存在差异，需强调在急性剧痛/神经症状/手法风险情况下才应避免。其余如NSAIDs短期、姿势管理、分级警示总体合理。",
+      "rag_coverage": "2/4项（50%）"
+    }
+  },
+  "category_c": {
+    "memory_retention": {
+      "score": 1,
+      "reason": "history里出现的追问（眼干、久坐活动、减肥水果）与当前解读未关联；若需多轮可回应追问或说明与本次影像无关。"
+    },
+    "understandability": {
+      "score": 2,
+      "reason": "使用类比解释‘老化磨损’并对术语做了括号说明，整体易懂。"
+    },
+    "conciseness": {
+      "score": 1,
+      "reason": "内容较长，部分建议（多种运动方式、复查说明）可合并精炼并按优先级排序。"
+    },
+    "personification": {
+      "score": 1,
+      "reason": "语气较友好但偏模板化，可增加更清晰的个体化分层（是否有腿麻/疼痛分级/既往史）。"
+    }
+  },
+  "key_findings": {
+    "issues": "(1) 复查MRI+增强的指征与时间点需更分层；(2) 对推拿/按摩的风险提示需更具体（何种情况下避免）；(3) 可根据症状补充保守治疗时长与康复动作禁忌。",
+    "rag_coverage": "2/4项（50%）"
+  }
+}

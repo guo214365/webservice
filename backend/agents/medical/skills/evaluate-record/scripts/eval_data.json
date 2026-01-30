@@ -1,0 +1,16 @@
+{
+  "report_id": "0",
+  "scores": {
+    "accuracy": 3,
+    "relevance": 1,
+    "timeliness": 2,
+    "completeness": 3,
+    "rationality": 3,
+    "memory": 2,
+    "understandability": 3,
+    "conciseness": 2,
+    "humanity": 2
+  },
+  "total_score": 21,
+  "summary": "解读准确度高，建议详实合理，通俗易懂。但遗漏了用户关于眼睛干涩和减肥的追问，相关性有待提升。"
+}
